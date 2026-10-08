@@ -13,14 +13,14 @@ def getTextFileName():
     
     Sources:
     """
-    # TODO: The function GetTextFileName should prompt the user for the name of a file. The file name should finish
+    # TODO: From project reqs: "The function GetTextFileName should prompt the user for the name of a file. The file name should finish
     #       with “.TXT”. (The case of the letters in “txt” should not matter, and there shouldn’t be quote marks.)
     #       If the filename does NOT end in “.txt”, GetTextFileName should give a descriptive error message and reprompt.
     #       If the user enters a null string,  GetTextFileName should give a descriptive error message and reprompt. If
     #       your group thinks of other things the user might do wrong when entering a Windows 11 filename, your
     #       GetTextFileName should protect against those problems as well, again using  a precise descriptive error
     #       message before reprompting. When the user has supplied a name that follows the rules for a Windows 11 file
-    #       name the ends in .txt, GetTextFileName should return that filename as a string to the caller.
+    #       name the ends in .txt, GetTextFileName should return that filename as a string to the caller."
     
 def validateBinary(binaryFile):
     """ Checks that binaryFile contains only 0's and 1's, has the same amount on each line, has at least 10 lines, and
