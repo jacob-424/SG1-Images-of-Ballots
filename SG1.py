@@ -3,24 +3,41 @@
 def getTextFileName():
     """ Prompts the user for the name of the binary text file.
         Created by ChatGPT.
-    
-    Args:
-    
-    Returns:
-        fileName (string): File name ending in ".txt"
         
-    Globals:
-    
-    Sources:
+    Returns:
+        filename (string): File name ending in ".txt"
     """
     # TODO: From project reqs: "The function GetTextFileName should prompt the user for the name of a file. The file name should finish
     #       with “.TXT”. (The case of the letters in “txt” should not matter, and there shouldn’t be quote marks.)
     #       If the filename does NOT end in “.txt”, GetTextFileName should give a descriptive error message and reprompt.
     #       If the user enters a null string,  GetTextFileName should give a descriptive error message and reprompt. If
     #       your group thinks of other things the user might do wrong when entering a Windows 11 filename, your
-    #       GetTextFileName should protect against those problems as well, again using  a precise descriptive error
+    #       GetTextFileName should protect against those problems as well, again using a precise descriptive error
     #       message before reprompting. When the user has supplied a name that follows the rules for a Windows 11 file
     #       name the ends in .txt, GetTextFileName should return that filename as a string to the caller."
+    
+    while True:
+        filename = input("Enter the name of a text file: ")
+
+        if filename == "":
+            print("Error: The filename cannot be empty.")
+            continue
+
+        if not filename.lower().endswith(".txt"):
+            print("Error: The filename must end with .txt.")
+            continue
+
+        invalid_characters = '<>:"/\\|?*'
+
+        if any(character in filename for character in invalid_characters):
+            print("Error: The filename contains characters that are not allowed in Windows filenames.")
+            continue
+
+        if filename.endswith(" ") or filename.endswith("."):
+            print("Error: A Windows filename cannot end with a space or period.")
+            continue
+
+        return filename
     
 def validateBinary(binaryFile):
     """ Checks that binaryFile contains only 0's and 1's, has the same amount on each line, has at least 10 lines, and
@@ -141,6 +158,7 @@ def matrixToImage3(zerosAndOnes, coords):
     
     
 def main():
+    ...
     # TODO: From project reqs: "write to the screen a short (one screen or less) explanation of what the program does."
     
     ### IMAGE1.png
