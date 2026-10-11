@@ -1,3 +1,5 @@
+import tkinter as tk
+
 #TODO: Add opening comment
 
 def getTextFileName():
@@ -82,7 +84,7 @@ def validateBinary(binary):
             raise ValueError("Each file line must contain at least 20 binary digits.")
         
         for char in line:
-            if  char != "0" and char != "1":
+            if  char != '0' and char != '1':
                 raise ValueError("File must only contain binary digits.")
     
     return True
@@ -99,6 +101,8 @@ def binaryToImage1(binary):
     Globals:
     
     Sources:
+        https://docs.python.org/3/library/tkinter.html#
+        https://www.geeksforgeeks.org/python/access-the-index-and-value-using-python-for-loop/
     """
     # TODO: From project reqs: "Then SG1 should convert the binary file into a .PNG black and white image file where a 0 will
     #       correspond to a black pixel, and a 1 will correspond to a white pixel. The first line of text should convert to the highest
@@ -111,8 +115,29 @@ def binaryToImage1(binary):
     #       image to the screen, and output it to the current directory with the name IMAGE1.PNG. If there already exists a
     #       file with that name in the current directory, overwrite it. If no file with that name exists, make a new file with
     #       that name."
-    #       Note: We could either output the image from this function or in main right after, whichever is preferred.
     
+    #img = tk.PhotoImage(width=10, height=10)
+    #img.put(data="{red blue red blue yellow}", to=(0, 0))
+    #img = img.zoom(x=50, y=50)
+    #img.write(filename="IMAGE1.png")
+    
+    lines = binary.splitlines()
+    num_of_cols = len(lines[0])
+    num_of_rows = len(lines)
+    
+    img = tk.PhotoImage(width=num_of_cols, height=num_of_rows)
+    
+    for y, line in enumerate(lines):
+        for x, bit in enumerate(line):
+            if bit == '0':
+                img.put(data="black", to=(x, y))
+            elif bit == '1':
+                img.put(data="white", to=(x, y))
+    
+    img = img.zoom(x=10, y=10)
+    img.write(filename="IMAGE1.png")
+    # TODO: Add error check when fail to write while image open
+                
 def image2ToMatrix():
     """ Converts IMAGE2.PNG into a matrix of 0's and 1's.
 
@@ -190,6 +215,18 @@ def main():
     
     ### IMAGE1.png
     
+    root = tk.Tk()
+    root.withdraw()
+    
+    #win = tk.Toplevel(root)
+    
+    #img = tk.PhotoImage(file="cat.png")
+    
+    #label = tk.Label(win, image=img)
+    #label.pack()
+    
+    #root.wait_window(win)
+        
     # TODO: Get the file name from the user using getTextFileName().
     filename = getTextFileName()
 
@@ -224,6 +261,8 @@ def main():
         print("Error: " + str(e))
         input("Press ENTER to exit.\n")
         return
+    
+    binaryToImage1(binary)
         
     # TODO: Convert the file to IMAGE1.png and output it using binaryToImage1().
     
