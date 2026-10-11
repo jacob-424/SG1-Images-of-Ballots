@@ -1,3 +1,5 @@
+import tkinter as tk
+
 #TODO: Add opening comment
 
 def getTextFileName():
@@ -53,8 +55,8 @@ def validateBinary(binary):
         ValueError: binary is an invalid binary file.
         
     Sources:
-        Learned what splitlines() does: https://www.geeksforgeeks.org/python/python-string-splitlines-method/
-        Learned to work with lists:  https://www.geeksforgeeks.org/python/python-lists/
+        For learning splitlines(): https://www.geeksforgeeks.org/python/python-string-splitlines-method/
+        For learning lists more:  https://www.geeksforgeeks.org/python/python-lists/
     """
     # From project reqs: "SG1 should make sure that the text file includes only text lines of zeroes
     # and ones. If the file includes anything else, SG1 should give an appropriate error message, prompt
@@ -82,7 +84,7 @@ def validateBinary(binary):
             raise ValueError("Each file line must contain at least 20 binary digits.")
         
         for char in line:
-            if  char != "0" and char != "1":
+            if  char != '0' and char != '1':
                 raise ValueError("File must only contain binary digits.")
     
     return True
@@ -93,26 +95,47 @@ def binaryToImage1(binary):
     Args:
         binary (string): The binary file contents to be converted to IMAGE1.png.
         
+    Returns:
+        True: Conversion and file output succeeded
+    
     Outputs:
         IMAGE1.png: binary converted to an image.
-        
-    Globals:
-    
+
     Sources:
+        For handling and display PNGs: https://docs.python.org/3/library/tkinter.html#
+        For learning enumerate(): https://www.geeksforgeeks.org/python/access-the-index-and-value-using-python-for-loop/
     """
-    # TODO: From project reqs: "Then SG1 should convert the binary file into a .PNG black and white image file where a 0 will
-    #       correspond to a black pixel, and a 1 will correspond to a white pixel. The first line of text should convert to the highest
-    #       row of pixels, the last line of text should correspond to the bottom line of pixels. The following illustration is too small
-    #       for a legal SG1 input file, but I hope it helps get the point across. Note that the top row is all white, so appears blank on
-    #       the page."
-    #       Note: The actual project requirements has the example image of what it should look like.
+    # From project reqs: "Then SG1 should convert the binary file into a .PNG black and white image file where a 0 will
+    # correspond to a black pixel, and a 1 will correspond to a white pixel. The first line of text should convert to the highest
+    # row of pixels, the last line of text should correspond to the bottom line of pixels. The following illustration is too small
+    # for a legal SG1 input file, but I hope it helps get the point across. Note that the top row is all white, so appears blank on
+    # the page."
+    # Note: The actual project requirements has the example image of what it should look like.
     #
-    #       "Once you have converted the text file of binary digits into a black and white .PNG image file, display resulting
-    #       image to the screen, and output it to the current directory with the name IMAGE1.PNG. If there already exists a
-    #       file with that name in the current directory, overwrite it. If no file with that name exists, make a new file with
-    #       that name."
-    #       Note: We could either output the image from this function or in main right after, whichever is preferred.
+    # "Once you have converted the text file of binary digits into a black and white .PNG image file, display resulting
+    # image to the screen, and output it to the current directory with the name IMAGE1.PNG. If there already exists a
+    # file with that name in the current directory, overwrite it. If no file with that name exists, make a new file with
+    # that name."
     
+    lines = binary.splitlines()
+    num_of_cols = len(lines[0])
+    num_of_rows = len(lines)
+    
+    img = tk.PhotoImage(width=num_of_cols, height=num_of_rows)
+    
+    # Create pixels
+    for y, line in enumerate(lines):
+        for x, bit in enumerate(line):
+            if bit == '0':
+                img.put(data="black", to=(x, y))
+            elif bit == '1':
+                img.put(data="white", to=(x, y))
+                
+    #img = img.zoom(5) # Magnify the image by a factor of 5
+    img.write(filename="IMAGE1.png")
+    # TODO: Add error check when fail to write while image is open
+    return True
+                
 def image2ToMatrix():
     """ Converts IMAGE2.PNG into a matrix of 0's and 1's.
 
@@ -183,6 +206,29 @@ def matrixToImage3(zerosAndOnes, coords):
     #       pattern shown above (a plus sign of black pixels in a background of white), the white pixels in that pattern in IMAGE2.PNG  (that is,
     #       the background to the black plus sign) should be changed into red pixels in IMAGE3.PNG. IMAGE3.PNG should be saved to the current directory
     #       as an external file, overwriting any such file if it already exists in the current directory."
+
+def displayImage(img_filename, root):
+    """ Displays img_filename in a new window. Program flow will not continue until this window is closed.
+
+    Args:
+        img_filename (string): The file name of the image to be displayed.
+        root (tkinter): The main tkinter object.
+        
+    Sources:
+        For displaying images: https://docs.python.org/3/library/tkinter.html#
+    """    
+    window = tk.Toplevel(root) # Create window containter
+    window.title(img_filename + " - Close to continue program")
+    window.minsize(640, 360)
+    window.attributes(topmost=True)
+    
+    img = tk.PhotoImage(file=img_filename) # Get IMAGE1
+    img = img.zoom(3) # Magnify the image
+    
+    label = tk.Label(window, image=img) # Put IMAGE1 inside the label
+    label.pack() # Pack the label inside window
+    
+    root.wait_window(window) # Display and wait until window is closed
     
     
 def main():
@@ -190,16 +236,19 @@ def main():
     
     ### IMAGE1.png
     
-    # TODO: Get the file name from the user using getTextFileName().
+    root = tk.Tk() # Initialize tkinter
+    root.withdraw() # Hide main window
+        
+    # Get the file name from the user using getTextFileName().
     filename = getTextFileName()
 
-    # TODO: Attempt to open the file.
-    #       From project reqs: "Once the user has supplied a legitimate text file name, SG1 should attempt
-    #       to open that file in the same directory where the program is running. If no file with that name
-    #       exists in the current directory, a descriptive error message should be printed to the screen,
-    #       and the user should be prompted to push ENTER. When the user pushes ENTER, SG1 should stop.
-    #       If the user correctly enters a text file name that does exist in the current directory, then SG1
-    #       should open the file."
+    # Attempt to open the file.
+    # From project reqs: "Once the user has supplied a legitimate text file name, SG1 should attempt
+    # to open that file in the same directory where the program is running. If no file with that name
+    # exists in the current directory, a descriptive error message should be printed to the screen,
+    # and the user should be prompted to push ENTER. When the user pushes ENTER, SG1 should stop.
+    # If the user correctly enters a text file name that does exist in the current directory, then SG1
+    # should open the file."
     try:
         file = open(filename, "r", encoding="utf-8")
         binary = file.read()
@@ -224,9 +273,12 @@ def main():
         print("Error: " + str(e))
         input("Press ENTER to exit.\n")
         return
-        
-    # TODO: Convert the file to IMAGE1.png and output it using binaryToImage1().
     
+    # Convert the file to IMAGE1.png using binaryToImage1() and output it
+    # Note: The displayed window must be closed before the program can continue
+    if binaryToImage1(binary):
+        displayImage("IMAGE1.png", root)
+        
     ### IMAGE2.png
     
     # TODO: Display IMAGE2.png.
