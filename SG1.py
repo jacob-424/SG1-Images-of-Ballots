@@ -7,14 +7,14 @@ def getTextFileName():
     Returns:
         filename (string): File name ending in ".txt"
     """
-    # TODO: From project reqs: "The function GetTextFileName should prompt the user for the name of a file. The file name should finish
-    #       with “.TXT”. (The case of the letters in “txt” should not matter, and there shouldn’t be quote marks.)
-    #       If the filename does NOT end in “.txt”, GetTextFileName should give a descriptive error message and reprompt.
-    #       If the user enters a null string,  GetTextFileName should give a descriptive error message and reprompt. If
-    #       your group thinks of other things the user might do wrong when entering a Windows 11 filename, your
-    #       GetTextFileName should protect against those problems as well, again using a precise descriptive error
-    #       message before reprompting. When the user has supplied a name that follows the rules for a Windows 11 file
-    #       name the ends in .txt, GetTextFileName should return that filename as a string to the caller."
+    # From project reqs: "The function GetTextFileName should prompt the user for the name of a file. The file name should finish
+    # with “.TXT”. (The case of the letters in “txt” should not matter, and there shouldn’t be quote marks.)
+    # If the filename does NOT end in “.txt”, GetTextFileName should give a descriptive error message and reprompt.
+    # If the user enters a null string,  GetTextFileName should give a descriptive error message and reprompt. If
+    # your group thinks of other things the user might do wrong when entering a Windows 11 filename, your
+    # GetTextFileName should protect against those problems as well, again using a precise descriptive error
+    # message before reprompting. When the user has supplied a name that follows the rules for a Windows 11 file
+    # name the ends in .txt, GetTextFileName should return that filename as a string to the caller."
     
     while True:
         filename = input("Enter the name of a text file: ")
@@ -39,34 +39,62 @@ def getTextFileName():
 
         return filename
     
-def validateBinary(binaryFile):
-    """ Checks that binaryFile contains only 0's and 1's, has the same amount on each line, has at least 10 lines, and
-        that each line contains at least 20 characters.
+def validateBinary(binary):
+    """ Checks that binary contains only 0's and 1's, has the same amount of digits on each line, has at least 10 lines, and
+        that each line contains at least 20 digits.
     
     Args:
-        binaryFile (file): User supplied binary file located in the project directory.
+        binary (string): Contents of the user supplied file located in the project directory.
         
     Returns:
+        True: binary is a valid binary file.
+
+    Raises:
+        ValueError: binary is an invalid binary file.
         
-    Globals:
-    
     Sources:
+        Learned what splitlines() does: https://www.geeksforgeeks.org/python/python-string-splitlines-method/
+        Learned to work with lists:  https://www.geeksforgeeks.org/python/python-lists/
     """
-    # TODO: From project reqs: "SG1 should make sure that the text file includes only text lines of zeroes
-    #       and ones. If the file includes anything else, SG1 should give an appropriate error message, prompt
-    #       for an ENTER, and halt when ENTER is pressed. (The text file will also contain end-of-line and end-of-file
-    #       markers, but otherwise it should only have 0’s and 1’s.) There should also be the same number of binary
-    #       characters on each line. There should be at least 10 lines, and each line should contain at least 20
-    #       characters. If not, SG1 should give an appropriate error message and halt on an ENTER, as above."
+    # From project reqs: "SG1 should make sure that the text file includes only text lines of zeroes
+    # and ones. If the file includes anything else, SG1 should give an appropriate error message, prompt
+    # for an ENTER, and halt when ENTER is pressed. (The text file will also contain end-of-line and end-of-file
+    # markers, but otherwise it should only have 0’s and 1’s.) There should also be the same number of binary
+    # characters on each line. There should be at least 10 lines, and each line should contain at least 20
+    # characters. If not, SG1 should give an appropriate error message and halt on an ENTER, as above."
     
-def binaryToImage1(binaryFile):
-    """ Converts binaryFile into a black and white image where 0's are black pixels and 1's are white pixels.
+    lines = binary.splitlines()
+    
+    # Checks if the file was empty
+    if len(lines) == 0:
+        raise ValueError("Each file line must contain at least 20 binary digits.")
+        
+    length = len(lines[0]) # For checking that each line is the same length
+    
+    if len(lines) < 10:
+        raise ValueError("File must contain at least 10 lines.")
+    
+    for line in lines:
+        if len(line) != length:
+            raise ValueError("Each file line must have the same length.")
+        
+        if len(line) < 20:
+            raise ValueError("Each file line must contain at least 20 binary digits.")
+        
+        for char in line:
+            if  char != "0" and char != "1":
+                raise ValueError("File must only contain binary digits.")
+    
+    return True
+    
+def binaryToImage1(binary):
+    """ Converts binary into a black and white image where 0's are black pixels and 1's are white pixels.
         The image will be named IMAGE1.png, saved in the project directory, and output to the screen.
     Args:
-        binaryFile (file): The file to be converted to IMAGE1.png.
+        binary (string): The binary file contents to be converted to IMAGE1.png.
         
     Outputs:
-        IMAGE1.png: binaryFile converted to an image.
+        IMAGE1.png: binary converted to an image.
         
     Globals:
     
@@ -173,21 +201,30 @@ def main():
     #       If the user correctly enters a text file name that does exist in the current directory, then SG1
     #       should open the file."
     try:
-        file = open(filename, "r")
+        file = open(filename, "r", encoding="utf-8")
         binary = file.read()
+        file.close()
     except FileNotFoundError:
         print("Error: File does not exist.")
         input("Press ENTER to exit.\n")
         return
-    except Exception:
-        print("Error: File could not be opened or read.")
+    except Exception as e:
+        print("Error: File could not be read.")
+        print("System Output: " + str(e))
         input("Press ENTER to exit.\n")
         file.close()
         return
-    file.close()
     
-    # TODO: Check that the file is valid using validateBinary(). If it is valid, output its contents.
-    
+    # Check that the file is valid using validateBinary(). If it's valid, output its contents.
+    try:
+        if validateBinary(binary):
+            print(filename + ":\n")
+            print(binary)
+    except ValueError as e:
+        print("Error: " + str(e))
+        input("Press ENTER to exit.\n")
+        return
+        
     # TODO: Convert the file to IMAGE1.png and output it using binaryToImage1().
     
     ### IMAGE2.png
