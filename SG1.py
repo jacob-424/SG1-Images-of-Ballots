@@ -158,12 +158,12 @@ def matrixToImage3(zerosAndOnes, coords):
     
     
 def main():
-    ...
     # TODO: From project reqs: "write to the screen a short (one screen or less) explanation of what the program does."
     
     ### IMAGE1.png
     
     # TODO: Get the file name from the user using getTextFileName().
+    filename = getTextFileName()
 
     # TODO: Attempt to open the file.
     #       From project reqs: "Once the user has supplied a legitimate text file name, SG1 should attempt
@@ -172,6 +172,19 @@ def main():
     #       and the user should be prompted to push ENTER. When the user pushes ENTER, SG1 should stop.
     #       If the user correctly enters a text file name that does exist in the current directory, then SG1
     #       should open the file."
+    try:
+        file = open(filename, "r")
+        binary = file.read()
+    except FileNotFoundError:
+        print("Error: File does not exist.")
+        input("Press ENTER to exit.\n")
+        return
+    except Exception:
+        print("Error: File could not be opened or read.")
+        input("Press ENTER to exit.\n")
+        file.close()
+        return
+    file.close()
     
     # TODO: Check that the file is valid using validateBinary(). If it is valid, output its contents.
     
