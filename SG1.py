@@ -207,6 +207,33 @@ def matrixToImage3(zerosAndOnes, coords):
     #       the background to the black plus sign) should be changed into red pixels in IMAGE3.PNG. IMAGE3.PNG should be saved to the current directory
     #       as an external file, overwriting any such file if it already exists in the current directory."
 
+    PLUS_RADIUS = 5  # The pattern is 11x11, so 5 pixels on each side of the middle
+
+    num_of_rows = len(zerosAndOnes)
+    num_of_cols = len(zerosAndOnes[0])
+
+    img = tk.PhotoImage(width=num_of_cols, height=num_of_rows)
+
+    # Start with the black and white image (0 = black, 1 = white)
+    for y in range(num_of_rows):
+        for x in range(num_of_cols):
+            if zerosAndOnes[y][x] == 0:
+                img.put(data="black", to=(x, y))
+            else:
+                img.put(data="white", to=(x, y))
+
+    # For each plus found, turn the white background pixels inside its 11x11 area red.
+    # The black plus itself is left alone.
+    for (row, col) in coords:
+        for y in range(row - PLUS_RADIUS, row + PLUS_RADIUS + 1):
+            for x in range(col - PLUS_RADIUS, col + PLUS_RADIUS + 1):
+                if 0 <= y < num_of_rows and 0 <= x < num_of_cols and zerosAndOnes[y][x] == 1:
+                    img.put(data='red', to=(x, y))
+
+    img.write(filename="IMAGE3.png")  # Overwrites an existing file
+    return True
+
+
 def displayImage(img_filename, root):
     """ Displays img_filename in a new window. Program flow will not continue until this window is closed.
 
