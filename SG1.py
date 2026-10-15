@@ -153,6 +153,30 @@ def image2ToMatrix():
     #       holds 0’s and 1’s. The PNG pixels will probably have 255 and 0 to make white and black pixels respectively. Wherever
     #       a pixel has the value 0, your matrix should have a 0. If a pixel has any value other than 0, your matrix should have
     #       a 1. I will call this array of values ZerosAndOnes."
+
+    image = tk.PhotoImage(file="IMAGE2.PNG")
+
+    width = image.width()
+    height = image.height()
+
+    zerosAndOnes = []
+
+    # Go through every pixel in IMAGE2
+    for row in range(height):
+        currentRow = []
+
+        for col in range(width):
+            pixel = image.get(col, row)
+
+            # Black pixel = 0, anything else = 1
+            if pixel == (0, 0, 0):
+                currentRow.append(0)
+            else:
+                currentRow.append(1)
+
+        zerosAndOnes.append(currentRow)
+
+    return zerosAndOnes
     
 def searchForPattern(zerosAndOnes):
     """ Searches zerosAndOnes for the plus pattern and returns the coordinates of each occurrence.
@@ -184,6 +208,47 @@ def searchForPattern(zerosAndOnes):
     #        This pattern may occur 0, 1 or 2 times in ZerosAndOnes. SG1 should report how many times it finds that exact pattern,
     #        and should give the coordinates of the middle of the pattern (where the horizontal and vertical lines of zeros intersect)
     #        for each pattern found."
+
+    pattern = [
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1]
+    ]
+
+    coords = []
+
+    rows = len(zerosAndOnes)
+    cols = len(zerosAndOnes[0])
+
+    # Try every possible location where an 11x11 pattern can fit
+    for row in range(rows - 10):
+        for col in range(cols - 10):
+
+            match = True
+
+            # Compare the 11x11 area with the required pattern
+            for patternRow in range(11):
+                for patternCol in range(11):
+                    if zerosAndOnes[row + patternRow][col + patternCol] != pattern[patternRow][patternCol]:
+                        match = False
+                        break
+
+                if not match:
+                    break
+
+            # Save the center of the pattern
+            if match:
+                coords.append((row + 5, col + 5))
+
+    return coords
 
 def matrixToImage3(zerosAndOnes, coords):
     """ Converts zeroesAndOnes to an image with each plus pattern highlighted red. The converted image will be
@@ -247,7 +312,7 @@ def displayImage(img_filename, root):
     window = tk.Toplevel(root) # Create window containter
     window.title(img_filename + " - Close to continue program")
     window.minsize(640, 360)
-    window.attributes(topmost=True)
+    window.attributes("-topmost", True)
     
     img = tk.PhotoImage(file=img_filename) # Get IMAGE1
     img = img.zoom(3) # Magnify the image
@@ -308,12 +373,21 @@ def main():
         
     ### IMAGE2.png
     
-    # TODO: Display IMAGE2.png.
+    # Display IMAGE2.png.
+    displayImage("IMAGE2.PNG", root)
+
     
-    # TODO: Convert IMAGE2 into zerosAndOnes using image2ToMatrix().
+    # Convert IMAGE2 into zerosAndOnes using image2ToMatrix().
+    zerosAndOnes = image2ToMatrix()
+
     
-    # TODO: Get the coordinates of each occurrence of the plus pattern using searchForPattern(). Output how
-    #       many were found and where.
+    # Get the coordinates of each occurrence of the plus pattern using searchForPattern(). 
+    coords = searchForPattern(zerosAndOnes)
+
+
+    # Output how many were found and where.
+    print("Number of patterns found:", len(coords))
+    print("Pattern center coordinates (row, column):", coords)
     
     ### IMAGE3.png
     
