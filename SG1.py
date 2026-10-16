@@ -139,14 +139,17 @@ def binaryToImage1(binary):
 def image2ToMatrix():
     """ Converts IMAGE2.PNG into a matrix of 0's and 1's.
 
-    Args:
+    Args: 
+        None
         
     Returns:
         zerosAndOnes (matrix): IMAGE2.png converted into a matrix.
         
     Globals:
+        None
     
     Sources:
+        https://docs.python.org/3/library/tkinter.html
     """
     
     # TODO: From project reqs: "SG1 should next convert IMAGE2.PNG into an array (or a list of lists – that’s your choice) that
@@ -188,8 +191,10 @@ def searchForPattern(zerosAndOnes):
         coords (list of tuples): The locations of each occurrence of the plus pattern in zerosAndOnes.
         
     Globals:
+        None
     
     Sources:
+        https://docs.python.org/3/tutorial/controlflow.html
     """
     ## TODO: From project reqs: "SG1 should search ZerosAndOnes, looking for the pattern on the next page:
     #
@@ -375,15 +380,12 @@ def main():
     
     # Display IMAGE2.png.
     displayImage("IMAGE2.PNG", root)
-
     
     # Convert IMAGE2 into zerosAndOnes using image2ToMatrix().
     zerosAndOnes = image2ToMatrix()
 
-    
     # Get the coordinates of each occurrence of the plus pattern using searchForPattern(). 
     coords = searchForPattern(zerosAndOnes)
-
 
     # Output how many were found and where.
     print("Number of patterns found:", len(coords))
