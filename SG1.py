@@ -396,6 +396,13 @@ def main():
     
     # TODO: From project reqs: "Then SG1 should instruct the user to push ENTER to end the program. When the user
     #       pushes ENTER, SG1 should halt."
+
+    # Convert the matrix to IMAGE3.png
+    if matrixToImage3(zerosAndOnes, coords):
+        displayImage("IMAGE3.png", root)
+
+    # Wait for the user to press ENTER before ending
+    input("Press ENTER to exit.\n")
     
 if __name__ == "__main__":
     main()
